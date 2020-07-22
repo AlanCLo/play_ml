@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+import os
+import json
+import uuid
+
+FILENAME = 'tictactoe.json'
+
 DRAW = -1
 EMPTY = 0
 PLAYER1 = 1
@@ -29,6 +35,7 @@ class Board:
     }
 
     def __init__(self, N=3):
+        self.id = uuid.uuid1()
         self.N = N
         self.state = [[EMPTY for j in range(self.N)] for i in range(self.N)]
         self.bitStates = {
@@ -37,6 +44,7 @@ class Board:
             PLAYER2: 0,
         }
         self.outcome = EMPTY
+        self.turns = []
 
     def print(self):
         i = 1
@@ -71,6 +79,9 @@ class Board:
         i, j = self.humanToIndicies(humanIndex)
         if self.state[i][j] != EMPTY:
             raise Exception("Not Empty!")
+
+        self.turns.append(self.bitStates.copy())
+
         self.state[i][j] = player
 
         arrayIndex = humanIndex - 1
@@ -97,11 +108,38 @@ class Board:
 
         return False
 
+    def validMoves(self):
+        moves = []
+        for m in range(self.N * self.N):
+            if self.bitStates[EMPTY] >> m & 1 == 0:
+                moves.append(m+1)
+        return moves
+
+    def saveJson(self):
+        if os.path.isfile(FILENAME):
+            with open(FILENAME, 'r') as f:
+                gameTurns = json.load(f)
+        else:
+            gameTurns = []
+
+        for t in self.turns:
+            gameTurns.append({
+                'uuid': str(self.id),
+                'Board': t[EMPTY],
+                'P1': t[PLAYER1],
+                'P2': t[PLAYER2],
+                'Result': self.outcome
+            })
+
+        with open(FILENAME, 'w') as outfile:
+            json.dump(gameTurns, outfile)
+
 
 def getPlayerInput(current, board):
     valid = False
     while not valid:
         try:
+            print(f"Valid Moves: {board.validMoves()}")
             print(f"Player {current} move: ")
             move = int(input())
             valid = board.isValidMove(move)
@@ -134,6 +172,8 @@ def main():
         print("Draw game")
     else:
         print(f"Player {b.outcome} wins!")
+
+    b.saveJson()
 
 
 if __name__ == '__main__':
