@@ -28,7 +28,6 @@ class SvmPlayer(AbstractPlayer):
         na = df.values
         X = na[:, 1:4]
         Y = na[:, 5].astype('int')
-        print(Y)
         self.clf = svm.SVC()
         self.clf.fit(X, Y)
 

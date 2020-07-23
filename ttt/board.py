@@ -66,11 +66,11 @@ class Board:
                 i += 1
             print(row)
 
-        for p, s in self.bitStates.items():
-            if p == 0:
-                print(f"Board state   : {s:>032b}")
-            else:
-                print(f"Player {int(p)} state: {s:>032b}")
+        # for p, s in self.bitStates.items():
+        #    if p == 0:
+        #        print(f"Board state   : {s:>032b}")
+        #    else:
+        #        print(f"Player {int(p)} state: {s:>032b}")
         print("\n")
 
     def humanToIndicies(self, humanIndex):
@@ -108,8 +108,6 @@ class Board:
 
         arrayIndex = humanIndex - 1
         Board._moveState(self.bitStates, player, arrayIndex)
-        # self.bitStates[player] = self.bitStates[player] | (1 << arrayIndex)
-        # self.bitStates[TI.EMPTY] = self.bitStates[TI.EMPTY] | (1 << arrayIndex)
 
         if player == TI.PLAYER1:
             self.currentPlayer = TI.PLAYER2
