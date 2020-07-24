@@ -2,6 +2,14 @@
 # The main problem here is that there isn't a linear relationship between
 # inputs and result...
 
+# Problem with SVM Player
+# 1. The early moves of the game don't really have a "classificaiton"
+# it is possible for someone to win after turn 1 or 2 even though tic-tac-toe
+# can be a sure-win for player 1. So its quite hard for the player to find
+# an alternative move in the early game.
+# i.e. All the moves look like they are win moves in the long run, lose moves
+# I guess it could be tweaked to take a random move of the choices when equal
+# but that isn't productive
 
 import numpy as np
 import pandas as pd
@@ -28,7 +36,7 @@ class SvmPlayer(AbstractPlayer):
         na = df.values
         X = na[:, 1:4]
         Y = na[:, 5].astype('int')
-        self.clf = svm.SVC()
+        self.clf = svm.SVR()
         self.clf.fit(X, Y)
 
     def getPlayerInput(self, board: Board):
@@ -38,6 +46,6 @@ class SvmPlayer(AbstractPlayer):
         mp = mp[mp[:, 1].argsort()]
         print("SVM analysis:")
         print(mp)
-        select_move = mp[-1, 0]
+        select_move = int(mp[-1, 0])
         print(f"SVM picks: {select_move}")
         return select_move

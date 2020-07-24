@@ -3,7 +3,6 @@
 import os
 from enum import Enum
 
-import pandas as pd
 from nanoid import generate
 
 
@@ -167,12 +166,11 @@ class Board:
                 'P2': t[TI.PLAYER2],
                 'Result': int(self.outcome)
             })
-        gameDF = pd.DataFrame(gameTurns)
-
-        if os.path.isfile(filename):
-            df = pd.read_csv(filename)
-            df = pd.concat([df, gameDF])
-        else:
-            df = gameDF
-
-        df.to_csv(filename, header=True, index=False)
+        if not os.path.isfile(filename):
+            print("starting new file")
+            with open(filename, "w") as f:
+                f.write("uuid,Board,P1,P2,Result\n")
+        with open(filename, "a") as f:
+            for t in gameTurns:
+                f.write(f"{t['uuid']}\
+,{t['Board']},{t['P1']},{t['P2']},{t['Result']}\n")
