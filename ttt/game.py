@@ -65,6 +65,7 @@ def main(args):
         print(">>>>>>>>>>>>>>>>>>>>>>>")
 
     for i in range(N):
+        print(f"Starting Game {i} of {N}...")
         player1 = instantiatePlayer(args.p1, TI.PLAYER1, args)
         player2 = instantiatePlayer(args.p2, TI.PLAYER2, args)
         g = Game(player1, player2, args.outputdata)

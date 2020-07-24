@@ -38,5 +38,6 @@ class SvmPlayer(AbstractPlayer):
         mp = mp[mp[:, 1].argsort()]
         print("SVM analysis:")
         print(mp)
-
-        return mp[-1, 0]
+        select_move = mp[-1, 0]
+        print(f"SVM picks: {select_move}")
+        return select_move
