@@ -5,6 +5,7 @@ import argparse
 from board import TI, Board
 from player import AbstractPlayer, ConsolePlayer, RandomPlayer
 from svm_player import SvmPlayer
+from minmax_player import MinMaxPlayer
 
 DEFAULT_OUT = 'ttt_default_data.csv'
 
@@ -46,12 +47,14 @@ class Game:
 
 def instantiatePlayer(typeString, player, args):
     print(f"Creating Player: {player} is {typeString}")
-    if typeString == "ConsolePlayer":
+    if typeString == "CP":
         return ConsolePlayer(player)
-    elif typeString == "RandomPlayer":
+    elif typeString == "RP":
         return RandomPlayer(player)
-    elif typeString == "SvmPlayer":
+    elif typeString == "SP":
         return SvmPlayer(player, args.inputdata)
+    elif typeString == "MM":
+        return MinMaxPlayer(player)
     raise Exception(f"{typeString} player not found!")
 
 
@@ -73,12 +76,12 @@ def main(args):
 
 
 if __name__ == '__main__':
-    player_choices = ("ConsolePlayer", "RandomPlayer", "SvmPlayer")
+    player_choices = ("CP", "RP", "SP", "MM")
     parser = argparse.ArgumentParser(description="Tic Tac Toe game!")
     parser.add_argument(
-        "-p1", choices=player_choices, dest="p1", default="ConsolePlayer")
+        "-p1", choices=player_choices, dest="p1", default="CP")
     parser.add_argument(
-        "-p2", choices=player_choices, dest="p2", default="ConsolePlayer")
+        "-p2", choices=player_choices, dest="p2", default="CP")
     parser.add_argument(
         "--input", action="store", dest="inputdata", default=DEFAULT_OUT)
     parser.add_argument(
@@ -91,17 +94,17 @@ if __name__ == '__main__':
     parser.add_argument("-rr", action="store_true")
     args = parser.parse_args()
     if args.hh:
-        args.p1 = "ConsolePlayer"
-        args.p2 = "ConsolePlayer"
+        args.p1 = "CP"
+        args.p2 = ""
     if args.hr:
-        args.p1 = "ConsolePlayer"
-        args.p2 = "RandomPlayer"
+        args.p1 = "CP"
+        args.p2 = "RP"
     if args.rh:
-        args.p1 = "RandomPlayer"
-        args.p2 = "ConsolePlayer"
+        args.p1 = "RP"
+        args.p2 = "CP"
     if args.rr:
-        args.p1 = "RandomPlayer"
-        args.p2 = "RandomPlayer"
+        args.p1 = "RP"
+        args.p2 = "RP"
         args.outputdata = "ttt_rr_data.csv"
 
     main(args)

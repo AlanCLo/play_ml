@@ -64,13 +64,14 @@ class Board:
                     row += str(value)
                 i += 1
             print(row)
-
-        # for p, s in self.bitStates.items():
-        #    if p == 0:
-        #        print(f"Board state   : {s:>032b}")
-        #    else:
-        #        print(f"Player {int(p)} state: {s:>032b}")
         print("\n")
+
+    def printStates(self):
+        for p, s in self.bitStates.items():
+            if p == 0:
+                print(f"Board state   : {s:>032b}")
+            else:
+                print(f"Player {int(p)} state: {s:>032b}")
 
     def humanToIndicies(self, humanIndex):
         humanIndex -= 1
