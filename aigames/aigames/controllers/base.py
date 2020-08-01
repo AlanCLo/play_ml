@@ -1,62 +1,93 @@
-
 from cement import Controller, ex
 from cement.utils.version import get_version_banner
 from ..core.version import get_version
 
-from ..games.ttt.game import PLAYER
+from ..games.ttt.game import Game as TTT
 
 VERSION_BANNER = """
 Basic games with AI %s
 %s
-""" % (get_version(), get_version_banner())
+""" % (
+    get_version(),
+    get_version_banner(),
+)
 
 
 class Base(Controller):
     class Meta:
-        label = 'base'
-
-        # text displayed at the top of --help output
-        description = 'Basic games with AI'
-
-        # text displayed at the bottom of --help output
-        epilog = 'Usage: aigames command1 --foo bar'
-
-        # controller level arguments. ex: 'aigames --version'
-        arguments = [
-            ### add a version banner
-            ( [ '-v', '--version' ],
-              { 'action'  : 'version',
-                'version' : VERSION_BANNER } ),
-        ]
-
+        label = "base"
+        description = "Basic games with AI"
+        epilog = "Usage: aigames (game)"
+        title = "Games"
+        arguments = [(
+            ["-v", "--version"],
+            {"action": "version", "version": VERSION_BANNER},
+        )]
 
     def _default(self):
-        """Default action if no sub-command is passed."""
-
         self.app.args.print_help()
 
-
     @ex(
-        help='example sub command1',
-
-        # sub-command level arguments. ex: 'aigames command1 --foo bar'
+        help="Tic Tac Toe",
+        description="Tic Tac Toe.",
         arguments=[
-            ### add a sample foo option under subcommand namespace
-            ( [ '-f', '--foo' ],
-              { 'help' : 'notorious foo option',
-                'action'  : 'store',
-                'dest' : 'foo' } ),
+            (
+                ["-p1"],
+                {
+                    "help": "Player 1 (X)",
+                    "action": "store",
+                    "choices": TTT.player_types(),
+                    "default": TTT.player_types()[0],
+                },
+            ),
+            (
+                ["-p2"],
+                {
+                    "help": "Player 2 (O)",
+                    "action": "store",
+                    "choices": TTT.player_types(),
+                    "default": TTT.player_types()[0],
+                },
+            ),
+            (
+                ["-N"],
+                {
+                    "help": "Number of games",
+                    "action": "store",
+                    "dest": "N",
+                    "default": 1,
+                },
+            ),
+            (
+                ["--save_file"],
+                {
+                    "help": "Name of save file of games",
+                    "action": "store",
+                    "dest": "save_file",
+                    "default": "ttt_data.csv",
+                },
+            ),
         ],
     )
-    def command1(self):
-        """Example sub-command."""
+    def ttt(self):
+        log = self.app.log
+        try:
+            N = int(self.app.pargs.N)
+            if N < 1:
+                raise Exception("N is negative.")
+        except Exception as e:
+            log.error(e)
+            log.error("N must be a positive integer")
+            raise e
 
-        data = {
-            'foo' : 'bar',
+        args = {
+            "p1": self.app.pargs.p1,
+            "p2": self.app.pargs.p2,
+            "N": N,
+            "save_file": self.app.pargs.save_file,
         }
+        self.app.render(args, "ttt_startup.jinja2")
 
-        ### do something with arguments
-        if self.app.pargs.foo is not None:
-            data['foo'] = self.app.pargs.foo
-
-        self.app.render(data, 'command1.jinja2')
+        for i in range(N):
+            game = TTT(args["p1"], args["p2"], args["save_file"])
+            game.play()

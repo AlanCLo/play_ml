@@ -6,7 +6,6 @@ from .controllers.base import Base
 
 # configuration defaults
 CONFIG = init_defaults('aigames')
-CONFIG['aigames']['foo'] = 'bar'
 
 
 class AiGames(App):
@@ -46,7 +45,7 @@ class AiGames(App):
         ]
 
 
-class AiGamesTest(TestApp,AiGames):
+class AiGamesTest(TestApp, AiGames):
     """A sub-class of AiGames that is better suited for testing."""
 
     class Meta:

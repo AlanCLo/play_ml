@@ -1,6 +1,5 @@
-
-from pytest import raises
 from aigames.main import AiGamesTest
+
 
 def test_aigames():
     # test aigames without any subcommands or arguments
@@ -17,20 +16,17 @@ def test_aigames_debug():
         assert app.debug is True
 
 
-def test_command1():
-    # test command1 without arguments
-    argv = ['command1']
+def test_ttt():
+    argv = ['ttt']
     with AiGamesTest(argv=argv) as app:
         app.run()
-        data,output = app.last_rendered
-        assert data['foo'] == 'bar'
-        assert output.find('Foo => bar')
+        data, output = app.last_rendered
+        assert data['N'] == 1
+        assert output.find('#Games   : 1')
 
-
-    # test command1 with arguments
-    argv = ['command1', '--foo', 'not-bar']
+    argv = ['ttt', '-N', '2']
     with AiGamesTest(argv=argv) as app:
         app.run()
-        data,output = app.last_rendered
-        assert data['foo'] == 'not-bar'
-        assert output.find('Foo => not-bar')
+        data, output = app.last_rendered
+        assert data['N'] == 2
+        assert output.find('#Games   : 2')
