@@ -4,7 +4,6 @@ from ..core.version import get_version
 
 from ..games.ttt.game import Game as TTT
 from ..games.ttt.console import ConsolePlayer, P1_CHAR, P2_CHAR
-from ..games.ttt.minmaxplayer import MinMaxPlayer
 
 VERSION_BANNER = """
 Basic games with AI %s

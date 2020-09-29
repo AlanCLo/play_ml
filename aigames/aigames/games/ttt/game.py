@@ -1,13 +1,18 @@
-# from nanoid import generate
 
 from .board import Board
 from .player import PlayerFactory
 from .console import Console
+from .minmaxplayer import MinMaxPlayer
 
 
 class Game:
+    """Controller class for Tic Tac Toe games"""
+
     def player_types():
         return PlayerFactory().player_type_list()
+
+    def get_default_ai_player():
+        return MinMaxPlayer.__name__
 
     def __init__(self, p1, p2, save, save_file):
         self.p1 = PlayerFactory().CreatePlayer(p1, True)
