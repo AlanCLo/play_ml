@@ -46,6 +46,9 @@ class Board:
         self.bit_p1 = bit_p1
         self.bit_p2 = bit_p2
 
+    def copy(self):
+        return Board(self.bit_board, self.bit_p1, self.bit_p2)
+
     def value_at(self, human_index):
         array_index = human_index - 1
         if not Board.test_bit(self.bit_board, array_index):
