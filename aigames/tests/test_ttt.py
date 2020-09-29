@@ -2,11 +2,9 @@ import sys
 from io import StringIO
 from contextlib import contextmanager
 
-from aigames.games.ttt.board import Outcome
-from aigames.games.ttt.board import Board
-from aigames.games.ttt.player import PlayerFactory
-from aigames.games.ttt.player import ConsolePlayer
-from aigames.games.ttt.player import RandomPlayer
+from aigames.games.ttt.board import Board, Cell, Outcome
+from aigames.games.ttt.player import PlayerFactory, RandomPlayer
+from aigames.games.ttt.console import ConsolePlayer
 
 
 def test_outcome():
@@ -37,9 +35,9 @@ def test_board():
         assert b.check_outcome().is_finished()
 
     b = Board(0B000011111, 0B000010101, 0B000001010)
-    assert b.value_at(1) == 1
-    assert b.value_at(2) == 2
-    assert b.value_at(6) == 0
+    assert b.value_at(1) == Cell.PLAYER1
+    assert b.value_at(2) == Cell.PLAYER2
+    assert b.value_at(6) == Cell.EMPTY
     assert b.check_outcome() == Outcome.NOT_FINISHED
     assert [m for m in b.get_valid_moves()] == [6, 7, 8, 9]
     assert b.get_valid_moves_list() == [6, 7, 8, 9]

@@ -3,6 +3,7 @@ from cement.utils.version import get_version_banner
 from ..core.version import get_version
 
 from ..games.ttt.game import Game as TTT
+from ..games.ttt.console import ConsolePlayer, P1_CHAR, P2_CHAR
 
 VERSION_BANNER = """
 Basic games with AI %s
@@ -34,19 +35,19 @@ class Base(Controller):
             (
                 ["-p1"],
                 {
-                    "help": "Player 1 (X)",
+                    "help": f"Player 1 ({P1_CHAR})",
                     "action": "store",
                     "choices": TTT.player_types(),
-                    "default": TTT.player_types()[0],
+                    "default": ConsolePlayer.__name__,
                 },
             ),
             (
                 ["-p2"],
                 {
-                    "help": "Player 2 (O)",
+                    "help": f"Player 2 ({P2_CHAR})",
                     "action": "store",
                     "choices": TTT.player_types(),
-                    "default": TTT.player_types()[0],
+                    "default": ConsolePlayer.__name__,
                 },
             ),
             (
@@ -56,6 +57,14 @@ class Base(Controller):
                     "action": "store",
                     "dest": "N",
                     "default": 1,
+                },
+            ),
+            (
+                ["--save"],
+                {
+                    "help": "Save moves to file at end of game",
+                    "action": "store_true",
+                    "dest": "save",
                 },
             ),
             (
@@ -84,10 +93,13 @@ class Base(Controller):
             "p1": self.app.pargs.p1,
             "p2": self.app.pargs.p2,
             "N": N,
+            "save": self.app.pargs.save,
             "save_file": self.app.pargs.save_file,
         }
         self.app.render(args, "ttt_startup.jinja2")
 
+        game_args = args.copy()
+        game_args.pop("N")
         for i in range(N):
-            game = TTT(args["p1"], args["p2"], args["save_file"])
+            game = TTT(**game_args)
             game.play()

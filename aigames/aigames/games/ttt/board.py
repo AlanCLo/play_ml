@@ -1,6 +1,13 @@
 from enum import Enum
 
 
+class Cell(Enum):
+    """Possible states of a single cell on the board"""
+    EMPTY = 0,
+    PLAYER1 = 1
+    PLAYER2 = 2
+
+
 class Outcome(Enum):
     """Possible outcomes of a single game"""
     DRAW = -1,
@@ -42,11 +49,11 @@ class Board:
     def value_at(self, human_index):
         array_index = human_index - 1
         if not Board.test_bit(self.bit_board, array_index):
-            return 0
+            return Cell.EMPTY
         elif Board.test_bit(self.bit_p1, array_index):
-            return 1
+            return Cell.PLAYER1
         else:
-            return 2
+            return Cell.PLAYER2
 
     def check_win(self, is_player1):
         s = self.bit_p1 if is_player1 else self.bit_p2

@@ -17,14 +17,14 @@ def test_aigames_debug():
 
 
 def test_ttt():
-    argv = ['ttt']
+    argv = ['ttt', '-p1', 'RandomPlayer', '-p2', 'RandomPlayer']
     with AiGamesTest(argv=argv) as app:
         app.run()
         data, output = app.last_rendered
         assert data['N'] == 1
         assert output.find('#Games   : 1')
 
-    argv = ['ttt', '-N', '2']
+    argv = ['ttt', '-N', '2', '-p1', 'RandomPlayer', '-p2', 'RandomPlayer']
     with AiGamesTest(argv=argv) as app:
         app.run()
         data, output = app.last_rendered

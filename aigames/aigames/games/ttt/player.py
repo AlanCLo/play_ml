@@ -50,25 +50,6 @@ def player_type(cls):
 
 
 @player_type
-class ConsolePlayer(AbstractPlayer):
-    def get_player_input(self, board):
-        valid = False
-        label = 'X' if self.is_player1 else 'O'
-        while not valid:
-            try:
-                print(f"Valid Moves: {board.get_valid_moves_list()}")
-                print(f"Player '{label}' move:")
-                move = int(input())
-                valid = board.is_valid_move(move)
-                if not valid:
-                    print(f"{move} is already taken.")
-            except Exception as e:
-                print(f"Invalid input {e}")
-                print("Please enter an integer.")
-        return move
-
-
-@player_type
 class RandomPlayer(AbstractPlayer):
     def get_player_input(self, board):
         return random.choice(board.get_valid_moves_list())
