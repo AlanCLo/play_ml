@@ -1,4 +1,6 @@
+import pytest
 import sys
+
 from io import StringIO
 from contextlib import contextmanager
 
@@ -60,6 +62,11 @@ def test_board():
     b = Board(0B111111111, 0B101100011, 0B010011100)
     assert b.check_outcome() == Outcome.DRAW
 
+    c = b.copy()
+    assert c.bit_board == b.bit_board
+    assert c.bit_p1 == b.bit_p1
+    assert c.bit_p2 == b.bit_p2
+
 
 def test_player_factory():
     pf = PlayerFactory()
@@ -70,6 +77,9 @@ def test_player_factory():
     assert cp.is_player1
     rp = pf.CreatePlayer("RandomPlayer", False)
     assert not rp.is_player1
+
+    with pytest.raises(Exception):
+        pf.CreatePlayer("asdf", True)
 
 
 @contextmanager
@@ -87,6 +97,10 @@ def test_console_player():
         assert p.get_player_input(b) == 1
     with replace_stdin(StringIO("2")):
         assert p.get_player_input(b) == 2
+
+    b = Board(0B000000011, 0B000000001, 0B000000010)
+    with replace_stdin(StringIO("1\n3")):
+        assert p.get_player_input(b) == 3
 
 
 def test_random_player():

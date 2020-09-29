@@ -1,3 +1,5 @@
+import pytest
+
 from aigames.main import AiGamesTest
 
 
@@ -16,7 +18,7 @@ def test_aigames_debug():
         assert app.debug is True
 
 
-def test_ttt():
+def test_ttt_arguments():
     argv = ['ttt', '-p1', 'RandomPlayer', '-p2', 'RandomPlayer']
     with AiGamesTest(argv=argv) as app:
         app.run()
@@ -30,3 +32,9 @@ def test_ttt():
         data, output = app.last_rendered
         assert data['N'] == 2
         assert output.find('#Games   : 2')
+
+    with pytest.raises(Exception):
+        argv = [
+            'ttt', '-N', '-10', '-p1', 'RandomPlayer', '-p2', 'RandomPlayer']
+        with AiGamesTest(argv=argv) as app:
+            app.run()

@@ -34,5 +34,4 @@ class Game:
 
         view.display_result(board)
 
-        if self.save:
-            print("TODO: Save game")
+        # TODO: save game moves
